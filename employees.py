@@ -18,12 +18,11 @@ Mlnames = list(Mlnames['Nazwisko aktualne'])[:1000]
 Flnames = list(Flnames['Nazwisko aktualne'])[:1000]
 
 def get_name(pos):
-    if rand() < 0.5 or pos == 'warehouse worker':    # male
+    if rand() < 0.5 or pos == 'physic worker':    # male
         name = rand_list(Ffnames).capitalize() + " " + rand_list(Flnames).capitalize()
     else:                                                    # female
         name = rand_list(Mfnames).capitalize() + " " + rand_list(Mlnames).capitalize()
     return name
-
 
 def get_birth_date(actual_date):
     birth_date = actual_date - timedelta(days=8400+15000*rand()) 
@@ -64,3 +63,15 @@ def make_employee(pos, act_date = date(2000,1,1), l_drivers=1, l_logistics=1):
 ###      job offer      ###
 ###########################
 
+class Job_offer():
+    def __init__(self, pos, act_date, company):
+        self.pos = pos
+        self.expire = act_date + timedelta(days = 3 * 10 ** rand())
+        self.company = company
+        print('New job offer:\npos:\t{}\nexp:\t{}\ncomp:\t'.format(self.pos, self.expire, self.company))
+    
+    def update(self, act_date):
+        if act_date >= self.expire:
+            self.company.employees.loc[len(self.company.employees)]=pd.Series(make_employee(self.pos, act_date, self.company.l_drivers, self.company.l_logistics)).values
+            self.company.job_offers.remove(self)
+        
