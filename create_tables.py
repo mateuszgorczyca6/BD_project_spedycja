@@ -1,6 +1,7 @@
 from connect import connect
 from datetime import datetime, date, timedelta
 from employees import *
+from transactions import *
 from math import ceil
 
 # file is 'D:\Programy\MySQL Server\data xyz\Data\mysql.db'
@@ -14,8 +15,9 @@ class Company():
     def __init__(self):
         # lists
         self.employees = pd.DataFrame(columns = ['Name',
-        'Position', 'Birth Date', 'Salary', 'Phone Number', 'Employment Date', 'Release Date'])
+        'Position', 'Birth Date', 'Last Salary', 'Phone Number', 'Employment Date', 'Release Date'])
         self.job_offers = []
+        self.transactions = pd.DataFrame(columns = ['Date', 'Sum', 'Type', 'Balance Change'])
 
         # planned number of employees
         self.plan_accountants = 1
@@ -36,34 +38,28 @@ class Company():
         # make boss
         self.employees.loc[len(self.employees)]=pd.Series(make_employee('boss', act_date, self.l_drivers, self.l_logistics)).values
 
-    def make_offers_if_needed(self, act_date):
-        if self.plan_accountants > self.l_accountants + self.o_accountants:
-            self.job_offers.append(Job_offer('accountant', act_date, self))
-            self.o_accountants += 1
-        if self.plan_drivers > self.l_drivers + self.o_drivers:
-            self.job_offers.append(Job_offer('driver', act_date, self))
-            self.o_drivers += 1
-        if self.plan_logistics > self.l_logistics + self.o_logistics:
-            self.job_offers.append(Job_offer('logistic', act_date, self))
-            self.o_logistics += 1
-        if self.plan_phisic_workers > self.l_phisic_workers + self.o_phisic_workers:
-            self.job_offers.append(Job_offer('physic worker', act_date, self))
-            self.o_phisic_workers += 1
+        # saldo
+        self.saldo = 10000
 
     def update(self):
-        self.make_offers_if_needed(act_date)
+        make_offers_if_needed(self, act_date)
         for i in self.job_offers:
             i.update(act_date)
+        delete_employee_when_released(self, act_date)
+        if act_date.month == 5 and act_date.day == 4:
+            change_salary(self, act_date)
+        if self.saldo > 200000:
+            add_driver(self) # add driver and other if needed
+        if act_date.day == 10: ## wypłata
+            add_salary(self, act_date)
 
     def __str__(self):
         return(str(self.employees))
 
 c = Company()
-print(act_date)
-print(c)
-while t <= 20:
+while t <= T:
     c.update()
     act_date += timedelta(days = 1)
     t += 1
-print(act_date)
-print(c)
+print(c.employees)
+print(c.transactions)
