@@ -1,4 +1,4 @@
-v 0.1 (18.06.2020r.)
+# v 0.1 (18.06.2020r.)
    connect.py \[new\]
       + function connectiong to database
    create_tables.py \[new\]
@@ -10,7 +10,7 @@ v 0.1 (18.06.2020r.)
       + salary generating
       + function that creates personal info of employee
       
-v 0.1.1 (18.06.2020r.)
+# v 0.1.1 (18.06.2020r.)
    create_tables.py
       ~ change persons indexing to starting from 0 not 1
       + function making job offers
@@ -18,7 +18,7 @@ v 0.1.1 (18.06.2020r.)
       ~ position name from 'worehouse worker' to 'phisic worker'
       + klasa Job_Offer
       
-v 0.1.2 (19.06.2020r.)
+# v 0.1.2 (19.06.2020r.)
    create_tables.py
       ~ column name from 'Salary' to 'Last Salary'
       + transactions list
@@ -35,7 +35,7 @@ v 0.1.2 (19.06.2020r.)
    transactions.py
       + function to pay salaries to employees
       
-v 0.2 (19.06.2020r.)
+# v 0.2 (19.06.2020r.)
    create_tables.py
       + cars list
       ~ saldo change from 10000 to 300000
@@ -50,7 +50,7 @@ v 0.2 (19.06.2020r.)
       ~ fixed: now salary is paid only when employee is working (before he was payed after released)
       + function that pay OC
 
-v 0.2.1 (19.06.2020r.)
+# v 0.2.1 (19.06.2020r.)
    create_tables.py
       ~ added 'Order ID' column to transaction list
       ~ added 'Price' column to cars list
