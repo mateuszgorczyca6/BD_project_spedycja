@@ -1,8 +1,8 @@
 # v 0.1 (18.06.2020r.)
-connect.py \[new\]
-+ function connectiong to database
-create_tables.py \[new\]
-+ number of workers
+   connect.py \[new\]
+      + function connectiong to database
+   create_tables.py \[new\]
+      + number of workers
       + make boss
    employees.py \[new\]
       + generating names
