@@ -18,8 +18,8 @@ class Company():
         self.employees = pd.DataFrame(columns = ['Name',
         'Position', 'Birth Date', 'Last Salary', 'Phone Number', 'Employment Date', 'Release Date'])
         self.job_offers = []
-        self.transactions = pd.DataFrame(columns = ['Date', 'Sum', 'Type', 'Balance Change'])
-        self.cars = pd.DataFrame(columns = ['Type', 'Last Overview', 'Capacity', 'Combust', 'Additional Functionality'])
+        self.transactions = pd.DataFrame(columns = ['Date', 'Sum', 'Type', 'Balance Change', 'Order ID'])
+        self.cars = pd.DataFrame(columns = ['Type', 'Last Overview', 'Capacity', 'Combust', 'Additional Functionality', 'Price'])
 
         # saldo
         self.saldo = 300000
@@ -68,7 +68,6 @@ class Company():
 
     def __str__(self):
         return(str(self.employees))
-
 c = Company()
 while t <= T:
     c.update()

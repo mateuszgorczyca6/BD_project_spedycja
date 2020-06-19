@@ -35,19 +35,20 @@ def make_car(comp, act_date): # we want   2 van : 3 struck : 4 btruck
         comb = floor(10 * (25 + 6 * rand())) / 10
         comp.l_btruck += 1
         price += 50000
-    comp.cars.loc[len(comp.cars)] = pd.Series([ctype, act_date, cap, comb, add]).values
-    comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, 'Zakup samochodu {}'.format(len(comp.cars)), -price]).values
+    print(price)
+    comp.cars.loc[len(comp.cars)] = pd.Series([ctype, act_date, cap, comb, add, price]).values
+    comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, 'Zakup samochodu {}'.format(len(comp.cars)), -price, None]).values
     comp.saldo -= price
 
 def destroy_car(comp, act_date):
     '''Check if car is damaged and make transaction for it'''
     for i in range(len(comp.cars)):
         if rand() <= 1/250:
-            price = 1000 * expon(1)
-            if price > comp.cars.loc[i]:
+            price = 1000 * expon.rvs(1)
+            if price > comp.cars.loc[i]['Price']:
                 title = f'Zakup nowego samochodu {i}'
-                price = comp.cars.loc[i]
+                price = comp.cars.loc[i]['Price']
             else:
                 title = f'Naprawa {i}'
-        comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, title, -price]).values
-        comp.saldo -= price
+            comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, title, -price, None]).values
+            comp.saldo -= price
