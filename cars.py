@@ -19,25 +19,25 @@ def make_car(comp, act_date): # we want   2 van : 3 struck : 4 btruck
         'fridge': 50 + 10 * rand(),
         'fluid, fridge': 75 + 10 * rand()}[add])
     if 3 * comp.l_van < 2 * comp.l_struck:
-        ctype = 'Dostawczak'
+        ctype = 'Van'
         cap = floor(10 * (0.8 + 0.2 * rand())) / 10
         comb = floor(10 * (9 + 2 * rand())) / 10
         comp.l_van += 1
     elif 4 * comp.l_struck < 3 * comp.l_btruck:
-        ctype = 'Mała Ciężarówka'
+        ctype = 'Small Truck'
         cap = floor(10 * (8 + 2 * rand())) / 10
         comb = floor(10 * (18 + 4 * rand())) / 10
         comp.l_struck += 1
         price += 20000
     else:
-        ctype = 'Duża Ciężarówka'
+        ctype = 'Big Truck'
         cap = floor(10 * (20 + 8 * rand())) / 10
         comb = floor(10 * (25 + 6 * rand())) / 10
         comp.l_btruck += 1
         price += 50000
     print(price)
     comp.cars.loc[len(comp.cars)] = pd.Series([ctype, act_date, cap, comb, add, price]).values
-    comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, 'Zakup samochodu {}'.format(len(comp.cars)), -price, None]).values
+    comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, 'Buy car {}'.format(len(comp.cars)), -price, None]).values
     comp.saldo -= price
 
 def destroy_car(comp, act_date):
@@ -46,9 +46,10 @@ def destroy_car(comp, act_date):
         if rand() <= 1/250:
             price = 1000 * expon.rvs(1)
             if price > comp.cars.loc[i]['Price']:
-                title = f'Zakup nowego samochodu {i}'
+                title = f'Buy car {i}'
                 price = comp.cars.loc[i]['Price']
+                comp.cars.loc[i]['Overview Date'] = act_date
             else:
-                title = f'Naprawa {i}'
+                title = f'Repair of {i}'
             comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, title, -price, None]).values
             comp.saldo -= price

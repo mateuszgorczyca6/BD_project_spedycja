@@ -21,7 +21,7 @@ Flnames = list(Flnames['Nazwisko aktualne'])[:1000]
 
 def get_name(pos):
     ''' Create Name'''
-    if rand() < 0.5 or pos == 'physic worker':    # male
+    if rand() < 0.5 or pos == 'manual worker':    # male
         name = rand_list(Ffnames).capitalize() + " " + rand_list(Flnames).capitalize()
         gender = 'male'
     else:                                                    # female
@@ -108,7 +108,7 @@ class Job_offer():
             elif self.pos == 'logistic':
                 self.company.l_logistics += 1
                 self.company.o_logistics -= 1
-            elif self.pos == 'phisic_worker':
+            elif self.pos == 'manual worker':
                 self.company.l_phisic_workers += 1
                 self.company.o_phisic_workers -= 1
 
@@ -128,7 +128,7 @@ def make_offers_if_needed(comp, act_date):
         comp.job_offers.append(Job_offer('logistic', act_date, comp))
         comp.o_logistics += 1
     if comp.plan_phisic_workers > comp.l_phisic_workers + comp.o_phisic_workers:
-        comp.job_offers.append(Job_offer('physic worker', act_date, comp))
+        comp.job_offers.append(Job_offer('manual worker', act_date, comp))
         comp.o_phisic_workers += 1
 
 ###########################
