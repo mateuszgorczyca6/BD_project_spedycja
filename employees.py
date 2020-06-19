@@ -4,6 +4,7 @@ from numpy.random import choice as rand_list
 from datetime import timedelta, date
 from math import floor, ceil
 from scipy.stats import expon
+from cars import *
 
 ###########################
 ###        names        ###
@@ -19,6 +20,7 @@ Mlnames = list(Mlnames['Nazwisko aktualne'])[:1000]
 Flnames = list(Flnames['Nazwisko aktualne'])[:1000]
 
 def get_name(pos):
+    ''' Create Name'''
     if rand() < 0.5 or pos == 'physic worker':    # male
         name = rand_list(Ffnames).capitalize() + " " + rand_list(Flnames).capitalize()
         gender = 'male'
@@ -32,6 +34,7 @@ def get_name(pos):
 ###########################
 
 def get_birth_date(actual_date):
+    ''' Create Birth Date'''
     birth_date = actual_date - timedelta(days=8400+15000*rand()) 
     return birth_date
 
@@ -40,6 +43,7 @@ def get_birth_date(actual_date):
 ###########################
 
 def get_salary(pos, act_date, employment_date, l_drivers, l_logistics):
+    '''Return Salary'''
     work_time = act_date.year - employment_date.year
     if pos == 'boss':
         return 100 * floor(50 + l_drivers ** 1/2 * 10)
@@ -48,11 +52,12 @@ def get_salary(pos, act_date, employment_date, l_drivers, l_logistics):
     elif pos == 'driver':
         return 3000 + 200 * work_time
     elif pos == 'logistic':
-        return 100 * floor((35 + l_drivers ** 1/2 * 7) ** 1/(l_logistics + 1))
+        return 100 * floor((35 + l_drivers ** 1/2 * 7) / (l_logistics + 1) ** 1/5)
     else:
         return 100 * (25 + l_logistics * 2)
 
 def change_salary(comp, act_date):
+    '''Change employees salary'''
     for i in range(len(comp.employees)):
         comp.employees.at[i, 'Last Salary'] = get_salary(comp.employees.loc[i]['Position'], act_date,
         comp.employees.loc[i]['Employment Date'], comp.l_drivers, comp.l_logistics)
@@ -66,7 +71,7 @@ def make_employee(pos, act_date = date(2000,1,1), l_drivers=1, l_logistics=1):
     name, gender = get_name(pos)
     birth_date = get_birth_date(act_date)
     salary = get_salary(pos, act_date, act_date, l_drivers, l_logistics)
-    phone_number = 500000000 + 300000000 * rand()
+    phone_number = floor(500000000 + 300000000 * rand())
     employment_date = act_date
     if pos == 'boss':
         release_date = None
@@ -84,6 +89,7 @@ def make_employee(pos, act_date = date(2000,1,1), l_drivers=1, l_logistics=1):
 ###########################
 
 class Job_offer():
+    ''' Job offer that will hire new person in few days'''
     def __init__(self, pos, act_date, company):
         self.pos = pos
         self.expire = act_date + timedelta(days = 3 * 10 ** rand())
@@ -111,6 +117,7 @@ class Job_offer():
 ###########################
 
 def make_offers_if_needed(comp, act_date):
+    ''' Make job offer f needed'''
     if comp.plan_accountants > comp.l_accountants + comp.o_accountants:
         comp.job_offers.append(Job_offer('accountant', act_date, comp))
         comp.o_accountants += 1
@@ -129,6 +136,7 @@ def make_offers_if_needed(comp, act_date):
 ###########################
 
 def delete_employee_when_released(comp, act_date):
+    ''' Delete employee when released'''
     for i in range(len(comp.employees)):
         release_date = comp.employees.loc[i]['Release Date']
         if not release_date is None and release_date == act_date:
@@ -146,7 +154,8 @@ def delete_employee_when_released(comp, act_date):
 ###    employee plan    ###
 ###########################
 
-def add_driver(comp):
+def add_driver(comp, act_date):
+    '''Add driver and other things when needed'''
     comp.plan_drivers += 1
     if comp.plan_drivers > comp.plan_phisic_workers * 3:
         comp.plan_phisic_workers += 1
@@ -154,3 +163,4 @@ def add_driver(comp):
         comp.plan_logistics += 1
     if comp.plan_drivers > comp.plan_accountants * 15:
         comp.plan_accountants += 1
+    make_car(comp, act_date)
