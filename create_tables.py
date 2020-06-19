@@ -15,11 +15,22 @@ act_date = date.today() - timedelta(days = T)
 class Company():
     def __init__(self):
         # lists
-        self.employees = pd.DataFrame(columns = ['Name',
-        'Position', 'Birth Date', 'Last Salary', 'Phone Number', 'Employment Date', 'Release Date'])
+        self.employees = pd.DataFrame(columns = [
+            'Name', 'Position', 'Birth Date', 'Last Salary', 'Phone Number', 'Employment Date', 'Release Date'
+        ])
         self.job_offers = []
-        self.transactions = pd.DataFrame(columns = ['Date', 'Sum', 'Type', 'Balance Change', 'Order ID'])
-        self.cars = pd.DataFrame(columns = ['Type', 'Last Overview', 'Capacity', 'Combust', 'Additional Functionality', 'Price'])
+        self.transactions = pd.DataFrame(columns = [
+            'Date', 'Sum', 'Type', 'Balance Change', 'Order ID'
+            ])
+        self.cars = pd.DataFrame(columns = [
+            'Type', 'Last Overview', 'Capacity', 'Combust', 'Additional Functionality', 'Price'
+        ])
+        self.orders = pd.DataFrame(columns = [
+            'Product', 'Origin', 'Destination', 'Distance', 'Special Treatment', 'Price', 'Mass', 'Date'
+        ])
+        self.clients = pd.DataFrame(columns = [
+            'Name', 'Bith Date', 'Phone Number', 'E-mail'
+        ])
 
         # saldo
         self.saldo = 300000

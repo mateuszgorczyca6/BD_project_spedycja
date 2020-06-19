@@ -35,7 +35,6 @@ def make_car(comp, act_date): # we want   2 van : 3 struck : 4 btruck
         comb = floor(10 * (25 + 6 * rand())) / 10
         comp.l_btruck += 1
         price += 50000
-    print(price)
     comp.cars.loc[len(comp.cars)] = pd.Series([ctype, act_date, cap, comb, add, price]).values
     comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, 'Buy car {}'.format(len(comp.cars)), -price, None]).values
     comp.saldo -= price
