@@ -52,7 +52,7 @@ def get_salary(pos, act_date, employment_date, l_drivers, l_logistics):
     elif pos == 'driver':
         return 3000 + 200 * work_time
     elif pos == 'logistic':
-        return 100 * floor((35 + l_drivers ** 1/2 * 7) / (l_logistics + 1) ** 1/5)
+        return 100 * floor((35 + l_drivers ** 1/2 * 7) / (l_logistics + 1) ** (1/5))
     else:
         return 100 * (25 + l_logistics * 2)
 
@@ -97,7 +97,9 @@ class Job_offer():
     
     def update(self, act_date):
         if act_date >= self.expire:
-            self.company.employees.loc[len(self.company.employees)]=pd.Series(make_employee(self.pos, act_date, self.company.l_drivers, self.company.l_logistics)).values
+            self.company.employees.loc[len(self.company.employees)]=pd.Series([
+                len(self.company.employees), *make_employee(self.pos, act_date, self.company.l_drivers, self.company.l_logistics)
+            ]).values
             self.company.job_offers.remove(self)
             if self.pos == 'accountant':
                 self.company.l_accountants += 1
@@ -105,6 +107,7 @@ class Job_offer():
             elif self.pos == 'driver':
                 self.company.l_drivers += 1
                 self.company.o_drivers -= 1
+                self.company.actual_drivers.append(len(self.company.employees) - 1)
             elif self.pos == 'logistic':
                 self.company.l_logistics += 1
                 self.company.o_logistics -= 1
@@ -145,6 +148,7 @@ def delete_employee_when_released(comp, act_date):
                 comp.l_accountants -= 1
             elif position == 'driver':
                 comp.l_drivers -= 1
+                comp.actual_drivers.remove(i)
             elif position == 'logistic':
                 comp.l_logistics -= 1
             else:

@@ -13,11 +13,11 @@ def make_car(comp, act_date): # we want   2 van : 3 struck : 4 btruck
     elif val < 0.95:
         add = 'fridge'
     else:
-        add = 'fluid, fridge'
+        add = 'fluid fridge'
     price = 1000 * floor({'': 45 + 10 * rand(),
         'fluid': 60 + 10 * rand(),
         'fridge': 50 + 10 * rand(),
-        'fluid, fridge': 75 + 10 * rand()}[add])
+        'fluid fridge': 75 + 10 * rand()}[add])
     if 3 * comp.l_van < 2 * comp.l_struck:
         ctype = 'Van'
         cap = floor(10 * (0.8 + 0.2 * rand())) / 10
@@ -35,8 +35,10 @@ def make_car(comp, act_date): # we want   2 van : 3 struck : 4 btruck
         comb = floor(10 * (25 + 6 * rand())) / 10
         comp.l_btruck += 1
         price += 50000
-    comp.cars.loc[len(comp.cars)] = pd.Series([ctype, act_date, cap, comb, add, price]).values
-    comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, 'Buy car {}'.format(len(comp.cars)), -price, None]).values
+    comp.cars.loc[len(comp.cars)] = pd.Series([len(comp.cars), ctype, act_date, cap, comb, add, price, float(0)]).values
+    comp.transactions.loc[len(comp.transactions)] = pd.Series([
+        len(comp.transactions), act_date, price, 'Buy car {}'.format(len(comp.cars)), -price, None
+    ]).values
     comp.saldo -= price
 
 def destroy_car(comp, act_date):
@@ -47,8 +49,22 @@ def destroy_car(comp, act_date):
             if price > comp.cars.loc[i]['Price']:
                 title = f'Buy car {i}'
                 price = comp.cars.loc[i]['Price']
-                comp.cars.loc[i]['Overview Date'] = act_date
+                comp.cars['Overview Date'][i] = act_date
             else:
                 title = f'Repair of {i}'
-            comp.transactions.loc[len(comp.transactions)] = pd.Series([act_date, price, title, -price, None]).values
+            comp.transactions.loc[len(comp.transactions)] = pd.Series([
+                len(comp.transactions), act_date, price, title, -price, None
+            ]).values
             comp.saldo -= price
+
+def tank_cars(comp, act_date):
+    '''Tank cars if passed 500km'''
+    for car in range(len(comp.cars)):
+        dist = comp.cars.loc[car]['Last Tanking (km)']
+        if dist > 500:
+            price = comp.cars.loc[car]['Combust'] * 500/100 * 4 # (fuel price)
+            comp.saldo -= price
+            comp.transactions.loc[len(comp.transactions)] = pd.Series([
+                len(comp.transactions), act_date, price, f'Tanking of {car}', -price, None
+            ]).values
+            comp.cars.at[car, 'Last Tanking (km)'] -= 500
